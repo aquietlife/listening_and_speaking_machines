@@ -24,7 +24,7 @@ stream = p.open(format=FORMAT,
                 frames_per_buffer=CHUNK)
 
 onset_threshold = 0.025
-offset_threshold = 0.009
+offset_threshold = 0.005
 
 RECORD = False
 
@@ -56,7 +56,8 @@ while True:
             # save the recorded audio to a file
             from datetime import datetime
             current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
-            sf.write(f'recorded_audio_{current_time}.wav', recorded_audio, RATE)
+            #sf.write(f'recorded_audio_{current_time}.wav', recorded_audio, RATE)
+            sf.write(f'test.wav', recorded_audio, RATE)
         recorded_audio = [] # reset recorded audio
 
 stream.stop_stream()
