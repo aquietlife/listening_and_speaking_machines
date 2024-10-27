@@ -1,3 +1,5 @@
 .DS_Store
 datasets/
 listening_machines/hands_on_machine_learning/
+model_weights/
+data/
