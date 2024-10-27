@@ -81,9 +81,8 @@ stream = p.open(format=FORMAT,
 onset_threshold = 0.025
 offset_threshold = 0.005
 
-RECORD = False
-
 recorded_audio = []
+
 print(" type ctrl+c to quit")
 
 phone_number = []
@@ -95,13 +94,11 @@ while True:
     rms = np.sqrt(audio_data ** 2).mean() # square each sample, take the mean, and then take the square root
 
     if rms > onset_threshold:
-        print("onset!")
+        #print("onset!")
         #print("recording")
-        RECORD = True
         recorded_audio.append(audio_data)
 
     elif rms < offset_threshold:
-        RECORD = False
         if len(recorded_audio) > 0: # at least 1 second of audio
             print("processing audio")
             #print("offset!")
@@ -113,13 +110,14 @@ while True:
             recorded_audio = np.concatenate(recorded_audio)
 
             # save the recorded audio to a file
-            from datetime import datetime
-            current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
+            #from datetime import datetime
+            #current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
             #sf.write(f'recorded_audio_{current_time}.wav', recorded_audio, RATE)
             #sf.write(f'test.wav', recorded_audio, RATE)
 
             #audio, sample_rate = librosa.load('test.wav', sr=22050)
 
+            # pad the audio to the longest audio file length
             current_size = len(recorded_audio)
             pad_size = longest_audio_file_length - current_size
             left_pad = pad_size // 2
@@ -142,7 +140,7 @@ while True:
 
             # Pass spec into model
             outputs = conv_model_loaded(spec)
-            prediction = outputs.argmax().item()
+            prediction = str(outputs.argmax().item())
             #print(outputs)
             # Print the prediction
             print("Model prediction:", prediction)
@@ -150,6 +148,16 @@ while True:
 
             if len(phone_number) == 10:
                 print("phone number:", phone_number)
+            
+                to_number = "+1" + "".join(phone_number)
+                print("calling", to_number)
+                call = client.calls.create(
+                    url="http://demo.twilio.com/docs/voice.xml",
+                    to=to_number,
+                    from_=my_twilio_number
+                )
+
+
                 phone_number = []
         
         recorded_audio = [] # reset recorded audio
