@@ -3,3 +3,7 @@ datasets/
 listening_machines/hands_on_machine_learning/
 model_weights/
 data/
+speech_digits/
+voices/
+jo_digits/
+real_data/
